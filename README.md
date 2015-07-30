@@ -36,61 +36,63 @@ Or install it yourself as:
 
 ## Usage
 
-    # Below is an example using integers (formatted as dates) as keys. You can just as easily use dates, times
-    # floats or other comparable types.
 
-    require 'range_tree'
+```ruby
+# Below is an example using integers (formatted as dates) as keys. You can just as easily use dates, times
+# floats or other comparable types.
 
-    staff_holidays = RangeTree::Tree.new
+require 'range_tree'
 
-    staff_holidays[2000_01_01, 2000_01_15] = "John"
-    staff_holidays[2000_01_15, 2000_01_31] = "Greig"
-    staff_holidays[2000_01_20, 2000_02_05] = "Eve"
-    staff_holidays[2000_01_03, 2000_01_08] = "Alice"
-    staff_holidays[2000_01_18, 2000_01_20] = "Bob"
+staff_holidays = RangeTree::Tree.new
 
-    # Check who is on holiday on certain dates
-    staff_holidays[2000_01_04]
-    => ["Alice", "John"]
+staff_holidays[2000_01_01, 2000_01_15] = "John"
+staff_holidays[2000_01_15, 2000_01_31] = "Greig"
+staff_holidays[2000_01_20, 2000_02_05] = "Eve"
+staff_holidays[2000_01_03, 2000_01_08] = "Alice"
+staff_holidays[2000_01_18, 2000_01_20] = "Bob"
 
-    # Check all staff members on holiday within a certain period by passing a range
-    staff_holidays[2000_01_12..2011_01_19]
-    => ["John", "Bob", "Greig", "Eve"]
+# Check who is on holiday on certain dates
+staff_holidays[2000_01_04]
+=> ["Alice", "John"]
+
+# Check all staff members on holiday within a certain period by passing a range
+staff_holidays[2000_01_12..2011_01_19]
+=> ["John", "Bob", "Greig", "Eve"]
 
 
-    # Iterate through all periods where the system state changes
-    staff_holidays.distinct.each do |date, staff|
-      puts "From #{date} #{staff} will be on holiday"
-    end
+# Iterate through all periods where the system state changes
+staff_holidays.distinct.each do |date, staff|
+  puts "From #{date} #{staff} will be on holiday"
+end
 
-    =>
-    From 20000101 ["John"] will be on holiday
-    From 20000103 ["John", "Alice"] will be on holiday
-    From 20000109 ["John"] will be on holiday
-    From 20000115 ["John", "Greig"] will be on holiday
-    From 20000116 ["Greig"] will be on holiday
-    From 20000118 ["Greig", "Bob"] will be on holiday
-    From 20000120 ["Greig", "Bob", "Eve"] will be on holiday
-    From 20000121 ["Greig", "Eve"] will be on holiday
-    From 20000132 ["Eve"] will be on holiday
-    From 20000206 [] will be on holiday
+=>
+From 20000101 ["John"] will be on holiday
+From 20000103 ["John", "Alice"] will be on holiday
+From 20000109 ["John"] will be on holiday
+From 20000115 ["John", "Greig"] will be on holiday
+From 20000116 ["Greig"] will be on holiday
+From 20000118 ["Greig", "Bob"] will be on holiday
+From 20000120 ["Greig", "Bob", "Eve"] will be on holiday
+From 20000121 ["Greig", "Eve"] will be on holiday
+From 20000132 ["Eve"] will be on holiday
+From 20000206 [] will be on holiday
 
-    # Iterate though all periods in the tree.
-    staff_holidays.all.each do |date, staff|
-      puts "#{staff} is on holiday on #{date}"
-    end
+# Iterate though all periods in the tree.
+staff_holidays.all.each do |date, staff|
+  puts "#{staff} is on holiday on #{date}"
+end
 
-    =>
-    ["John"] is on holiday on 20000101
-    ["John"] is on holiday on 20000102
-    ["John", "Alice"] is on holiday on 20000103
-    ["John", "Alice"] is on holiday on 20000104
-    ["John", "Alice"] is on holiday on 20000105
-    ["John", "Alice"] is on holiday on 20000106
-    ["John", "Alice"] is on holiday on 20000107
-    ["John", "Alice"] is on holiday on 20000108
-    ["John"] is on holiday on 20000109
-    ["John"] is on holiday on 20000110
-    ["John"] is on holiday on 20000111
-    ...
-
+=>
+["John"] is on holiday on 20000101
+["John"] is on holiday on 20000102
+["John", "Alice"] is on holiday on 20000103
+["John", "Alice"] is on holiday on 20000104
+["John", "Alice"] is on holiday on 20000105
+["John", "Alice"] is on holiday on 20000106
+["John", "Alice"] is on holiday on 20000107
+["John", "Alice"] is on holiday on 20000108
+["John"] is on holiday on 20000109
+["John"] is on holiday on 20000110
+["John"] is on holiday on 20000111
+...
+```
