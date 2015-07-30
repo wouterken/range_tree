@@ -3,12 +3,13 @@ require "range_tree/version"
 module RangeTree
   class Tree
     require 'set'
-    attr_accessor :children, :root, :starts, :ends
+    attr_accessor :children, :root, :starts, :ends, :rebuild_on_add
 
     MAX_REBUILD_SIZE = 500
 
-    def initialize
+    def initialize(rebuild_on_add: true)
       self.children = []
+      self.rebuild_on_add = rebuild_on_add
       self.starts   = Hash.new{|h,k| h[k] = []}
       self.ends     = Hash.new{|h,k| h[k] = []}
     end
@@ -18,11 +19,15 @@ module RangeTree
       self.children                                          << node
       self.starts[min]                                       << node
       self.ends[max.respond_to?(:succ) ? max.succ : max + 1] << node
-      self.rebuild if self.children.length < MAX_REBUILD_SIZE
+      self.rebuild if self.rebuild_on_add
     end
 
-    def << ((min, max, value))
+    def []=(min, max, value)
       add(min, max, value)
+    end
+
+    def >>(value)
+      remove(value)
     end
 
     def remove(value)
@@ -30,7 +35,7 @@ module RangeTree
       self.children.delete(node_to_remove)
       self.starts[node_to_remove.min].delete(node_to_remove)
       self.ends[node_to_remove.max].delete(node_to_remove)
-      self.rebuild if self.children.length < MAX_REBUILD_SIZE
+      self.rebuild if self.rebuild_on_add
       return node_to_remove.min..node_to_remove.max
     end
 
@@ -40,6 +45,15 @@ module RangeTree
         Node.new(pair.map(&:min).min, pair.map(&:max).max, pair)
       end while current_level.length > 1
       self.root = current_level.first
+    end
+
+
+    def distinct &block
+      iterate([*self.starts.keys, *self.ends.keys].uniq.sort).each(&block)
+    end
+
+    def all &block
+      iterate(self.starts.keys.min..self.ends.keys.max).each(&block)
     end
 
     def [](index)
@@ -54,7 +68,9 @@ module RangeTree
       end
     end
 
+    private
     def iterate(range)
+      return [] unless self.root
       collection = Set.new(self.root.search(range.first))
       Enumerator.new do |enum|
         range.each do |current_point|
@@ -65,13 +81,6 @@ module RangeTree
       end
     end
 
-    def distinct &block
-      iterate([*self.starts.keys, *self.ends.keys].uniq.sort).each(&block)
-    end
-
-    def all &block
-      iterate(self.starts.keys.min..self.ends.keys.max).each(&block)
-    end
   end
 
   class Node
