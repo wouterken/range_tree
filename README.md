@@ -14,7 +14,7 @@ For small trees you can use the default settings
 which rebuild the tree every time you add a value.
 
 If you need to build a very large tree with 1000's of values
-you need to pass ```rebuild_on_add: false``` to the tree.
+you need to pass a first argument of (rebuild_on_add) ```false``` to the tree.
 Then add everything to your tree and only once it is complete
 you must call ```tree.rebuild``` to build your index.
 
@@ -95,4 +95,17 @@ end
 ["John"] is on holiday on 20000110
 ["John"] is on holiday on 20000111
 ...
+
+# Remove values from tree
+
+staff_holidays >> "John"
+# or
+staff_holidays.remove "John"
+
+# Get smallest or largest keys in tree
+staff_holidays.max
+=> 2000_02_05
+
+staff_holidays.min
+=> 2000_01_01
 ```

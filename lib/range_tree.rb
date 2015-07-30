@@ -5,9 +5,7 @@ module RangeTree
     require 'set'
     attr_accessor :children, :root, :starts, :ends, :rebuild_on_add
 
-    MAX_REBUILD_SIZE = 500
-
-    def initialize(rebuild_on_add: true)
+    def initialize(rebuild_on_add=true)
       self.children = []
       self.rebuild_on_add = rebuild_on_add
       self.starts   = Hash.new{|h,k| h[k] = []}
@@ -28,6 +26,14 @@ module RangeTree
 
     def >>(value)
       remove(value)
+    end
+
+    def min
+      self.root && self.root.min
+    end
+
+    def max
+      self.root && self.root.max
     end
 
     def remove(value)
@@ -66,6 +72,18 @@ module RangeTree
       else
         raise "Unexpected index type #{index.class}"
       end
+    end
+
+    def to_s
+      if self.root
+        "RangeTree[#{root.min}..#{root.max}]"
+      else
+        "RangeTree[empty]"
+      end
+    end
+
+    def inspect
+      "#{self}"
     end
 
     private
