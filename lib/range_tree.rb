@@ -1,6 +1,6 @@
 require "range_tree/version"
 
-module Range
+module RangeTree
   class Tree
     require 'set'
     attr_accessor :children, :root, :starts, :ends
