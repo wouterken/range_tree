@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = RangeTree::VERSION
   spec.authors       = ["Wouter Coppieters"]
   spec.email         = ["wouter.coppieters@youdo.co.nz"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{An efficient tree structure for querying on data with overlapping ranges}
+  spec.description   = %q{An efficient tree structure for querying on data with overlapping ranges}
   spec.homepage      = ""
   spec.license       = "MIT"
 
